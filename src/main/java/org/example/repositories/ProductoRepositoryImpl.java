@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ProductoRepositoryImpl implements ProductoRepository<Producto> {
 
-    private Connection conn;
+    private final Connection conn;
 
     public ProductoRepositoryImpl(Connection conn) {
         this.conn = conn;
@@ -31,7 +31,7 @@ public class ProductoRepositoryImpl implements ProductoRepository<Producto> {
     @Override
     public Producto porId(Long id) throws SQLException {
         Producto producto = null;
-        String sql ="SELECT p.*,c.nombre AS categoria FROM productos AS p INNER JOIN categorias AS c ON(p.categoria_id= c.id) WHERE id=?";
+        String sql ="SELECT p.*,c.nombre AS categoria FROM productos AS p INNER JOIN categorias AS c ON(p.categoria_id= c.id) WHERE p.id=?";
         try (PreparedStatement statement = conn.prepareStatement(sql)){
             statement.setLong(1,id);
             try(ResultSet rs = statement.executeQuery()){
@@ -74,7 +74,7 @@ public class ProductoRepositoryImpl implements ProductoRepository<Producto> {
         }
     }
 
-    private Producto crearProducto(ResultSet rs) throws SQLException {
+    private static Producto crearProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setId(rs.getLong("id"));
         p.setNombre(rs.getString("nombre"));
