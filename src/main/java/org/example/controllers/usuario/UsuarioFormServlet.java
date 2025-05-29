@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controllers.login;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -6,8 +6,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.models.Usuario;
-import org.example.services.login.LoginService;
-import org.example.services.login.LoginServiceImpl;
 import org.example.services.usuario.UsuarioService;
 import org.example.services.usuario.UsuarioServiceImpl;
 
