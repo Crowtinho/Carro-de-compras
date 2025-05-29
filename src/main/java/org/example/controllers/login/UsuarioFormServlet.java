@@ -1,0 +1,90 @@
+package org.example.controllers;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.example.models.Usuario;
+import org.example.services.login.LoginService;
+import org.example.services.login.LoginServiceImpl;
+import org.example.services.usuario.UsuarioService;
+import org.example.services.usuario.UsuarioServiceImpl;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+@WebServlet("/login/form")
+public class UsuarioFormServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Connection conn = (Connection) req.getAttribute("conn");
+        UsuarioService usuarioService = new UsuarioServiceImpl(conn);
+
+        long id;
+        try{
+            id = Long.parseLong(req.getParameter("id"));
+        }catch (NumberFormatException e ){
+            id = 0L;
+        }
+        Usuario usuario = new Usuario();
+        if (id>0){
+            Optional<Usuario> o = usuarioService.porId(id);
+            if (o.isPresent()){
+                usuario = o.get();
+            }
+        }
+        req.setAttribute("usuario",usuario);
+        getServletContext().getRequestDispatcher("/loginForm.jsp").forward(req,resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Connection conn = (Connection) req.getAttribute("conn");
+        UsuarioService service = new UsuarioServiceImpl(conn);
+
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        String email = req.getParameter("email");
+
+        Map<String, String> errores = new HashMap<>();
+        if (username == null || username.isBlank()){
+            errores.put("username","el usuario es requerido");
+        }
+
+        if (service.username(username).isPresent()){
+            errores.put("username","el usuario ya existe");
+        }
+
+        if (service.email(email).isPresent()){
+            errores.put("email","el email ya está registrado");
+
+        }
+
+
+        long id;
+        try{
+            id = Long.parseLong(req.getParameter("id"));
+        } catch (NumberFormatException e) {
+            id = 0L;
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setId(id);
+        usuario.setUsername(username);
+        usuario.setPassword(password);
+        usuario.setEmail(email);
+
+        if (errores.isEmpty()){
+            service.guardar(usuario);
+            resp.sendRedirect(req.getContextPath()+"/home");
+        }else {
+            req.setAttribute("errores",errores);
+            req.setAttribute("usuario",usuario);
+            getServletContext().getRequestDispatcher("/loginForm.jsp").forward(req,resp);
+        }
+    }
+}
