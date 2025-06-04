@@ -14,47 +14,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Productos</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 90%;
-            margin: auto;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #eee;
-        }
-        h1 {
-            text-align: center;
-        }
-        .actions a {
-            margin-right: 8px;
-        }
-        .top-actions {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .bottom-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 </head>
 <body>
-    <h1>Productos</h1>
+<div class="container">
+
+    <h1 class="text-center">Productos</h1>
 
     <% if (username.isPresent()) { %>
         <div class="top-actions">
-            <a href="<%=request.getContextPath()%>/productos/form">Agregar producto</a>
+
+            <a class="btn btn-sm btn-primary" href="<%=request.getContextPath()%>/productos/form">Agregar producto</a>
         </div>
+        <br>
     <% } %>
 
-    <table>
-        <thead>
+    <table class="table table-hover table-striped">
+        <thead class="table-primary">
             <tr>
                 <th>Producto</th>
                 <th>Categoría</th>
@@ -77,11 +55,11 @@
                     <td><%= p.getCategoria().getNombre() %></td>
                     <% if (username.isPresent()) { %>
                         <td><%= precioFormateado %></td>
-                        <td><a href="<%= request.getContextPath() %>/carro/agregar?id=<%= p.getId() %>">Agregar al carro</a></td>
+                        <td><a class="btn btn-sm btn-success" href="<%= request.getContextPath() %>/carro/agregar?id=<%= p.getId() %>">Agregar</a></td>
                     <% } %>
                     <% if (username != null && usuario != null && "admin".equals(usuario.getRol())) { %>
-                        <td><a href="<%= request.getContextPath() %>/productos/form?id=<%= p.getId() %>">Editar</a></td>
-                        <td><a onclick="return confirm('¿Está seguro que desea eliminar este producto?');"
+                        <td><a class="btn btn-sm btn-warning" href="<%= request.getContextPath() %>/productos/form?id=<%= p.getId() %>">Editar</a></td>
+                        <td><a class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro que desea eliminar este producto?');"
                                href="<%= request.getContextPath() %>/productos/eliminar?id=<%= p.getId() %>">Eliminar</a></td>
                     <% } %>
                 </tr>
@@ -90,7 +68,8 @@
     </table>
 
     <div class="bottom-link">
-        <a href="<%= request.getContextPath() %>/home">Menú</a>
+        <a class="btn btn-sm btn-primary" href="<%= request.getContextPath() %>/home">Menú</a>
     </div>
+</div>
 </body>
 </html>
