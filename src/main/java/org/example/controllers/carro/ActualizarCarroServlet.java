@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controllers.carro;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,7 +10,6 @@ import org.example.models.Carro;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 

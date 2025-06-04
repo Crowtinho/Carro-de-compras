@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controllers.producto;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,7 +9,6 @@ import org.example.models.Categoria;
 import org.example.models.Producto;
 import org.example.services.categoria.CategoriaService;
 import org.example.services.categoria.CategoriaServiceImpl;
-import org.example.services.producto.ProductoService;
 import org.example.services.producto.ProductoServiceImpl;
 import org.example.services.producto.ProductoSnService;
 
@@ -64,7 +63,7 @@ public class ProductoFormServlet extends HttpServlet {
             precio = String.valueOf(0);
         }
 
-        String sku = req.getParameter("sku");
+
         String fechaStr = req.getParameter("fecha_registro");
         Long categoriaId;
         try {
@@ -77,11 +76,7 @@ public class ProductoFormServlet extends HttpServlet {
         if (nombre == null || nombre.isBlank()){
             errores.put("nombre", "el nombre es requerido!");
         }
-        if (sku == null || sku.isBlank()){
-            errores.put("sku", "el sku es requerido!");
-        } else if (sku.length() > 10){
-            errores.put("sku", "el sku debe tener max 10 caracteres!");
-        }
+
 
         if (fechaStr == null || fechaStr.isBlank()){
             errores.put("fecha_registro", "la fecha es requerida");
@@ -108,7 +103,6 @@ public class ProductoFormServlet extends HttpServlet {
         Producto producto = new Producto();
         producto.setId(id);
         producto.setNombre(nombre);
-        producto.setSku(sku);
         producto.setPrecio(new BigDecimal(precio));
         producto.setFechaRegistro(fecha);
 

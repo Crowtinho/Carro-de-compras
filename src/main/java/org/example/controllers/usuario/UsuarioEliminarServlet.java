@@ -1,8 +1,8 @@
-package org.example.controllers.login;
+package org.example.controllers.usuario;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
-@WebServlet("/usuario/eliminar")
+@WebServlet("/usuarios/eliminar")
 public class UsuarioEliminarServlet extends HttpServlet {
 
 

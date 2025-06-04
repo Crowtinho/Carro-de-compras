@@ -1,4 +1,4 @@
-package org.example.controllers.login;
+package org.example.controllers.usuario;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@WebServlet("/login/form")
+@WebServlet("/usuarios/form")
 public class UsuarioFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,20 +47,7 @@ public class UsuarioFormServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-
-        Map<String, String> errores = new HashMap<>();
-        if (username == null || username.isBlank()){
-            errores.put("username","el usuario es requerido");
-        }
-
-        if (service.username(username).isPresent()){
-            errores.put("username","el usuario ya existe");
-        }
-
-        if (service.email(email).isPresent()){
-            errores.put("email","el email ya está registrado");
-
-        }
+//        String rol =req.getParameter("rol");
 
 
         long id;
@@ -70,15 +57,51 @@ public class UsuarioFormServlet extends HttpServlet {
             id = 0L;
         }
 
+        Map<String, String> errores = new HashMap<>();
+        if (username == null || username.isBlank()){
+            errores.put("username","el usuario es requerido");
+        }
+
+        Optional<Usuario> existenteUsername = service.username(username);
+        if (existenteUsername.isPresent() && existenteUsername.get().getId() != id) {
+            errores.put("username", "el usuario ya existe");
+        }
+
+   /*     if (service.username(username).isPresent()){
+            errores.put("username","el usuario ya existe");
+        }*/
+        if (email == null || !email.contains("@") || !email.contains(".")){
+            errores.put("email","ingrese un formato de email valido");
+        }
+
+      /*  if (service.email(email).isPresent()){
+            errores.put("email","el email ya está registrado");
+        }*/
+
+
+        if (password ==null || password.isBlank()){
+            errores.put("password","ingrese una contraseña");
+        }
+
+        Optional<Usuario> existenteEmail = service.email(email);
+        if (existenteEmail.isPresent() && existenteEmail.get().getId() != id) {
+            errores.put("email", "el email ya está registrado");
+        }
+
+
+
         Usuario usuario = new Usuario();
         usuario.setId(id);
         usuario.setUsername(username);
         usuario.setPassword(password);
         usuario.setEmail(email);
+        usuario.setRol("user");
+
+
 
         if (errores.isEmpty()){
             service.guardar(usuario);
-            resp.sendRedirect(req.getContextPath()+"/home");
+            resp.sendRedirect(req.getContextPath()+"/usuarios");
         }else {
             req.setAttribute("errores",errores);
             req.setAttribute("usuario",usuario);

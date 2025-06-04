@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controllers.login;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,15 +39,21 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+        String error = "error, el usuario y la contraseña no coinciden";
+
 
         UsuarioService service = new UsuarioServiceImpl((Connection) req.getAttribute("conn"));
         Optional<Usuario> usuario = service.login(username,password);
         if (usuario.isPresent()){
             HttpSession session = req.getSession();
             session.setAttribute("username", username);
+            session.setAttribute("usuario", usuario.get());
             resp.sendRedirect(req.getContextPath() + "/login");
         }else {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED,"no tiene autorización");
+            req.setAttribute("error",error);
+            getServletContext().getRequestDispatcher("/login.jsp").forward(req,resp);
+
+//            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED,"no tiene autorización");
         }
     }
 }

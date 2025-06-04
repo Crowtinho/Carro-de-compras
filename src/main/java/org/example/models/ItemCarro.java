@@ -24,7 +24,7 @@ public class ItemCarro {
         this.cantidad = cantidad;
     }
 
-    public Producto getItem() {
+    public Producto getProducto() {
         return item;
     }
 
@@ -41,7 +41,8 @@ public class ItemCarro {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ItemCarro itemCarro = (ItemCarro) o;
-        return Objects.equals(item, itemCarro.item);
+        return Objects.equals(item.getId(), itemCarro.item.getId())&&
+                Objects.equals(item.getNombre(), itemCarro.item.getNombre());
     }
 
     @Override

@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriaRepositoryImpl implements ProductoRepository<Categoria>{
+public class CategoriaRepositoryImpl implements Repository<Categoria> {
     private final Connection conn;
 
     public CategoriaRepositoryImpl(Connection conn) {

@@ -1,5 +1,6 @@
 package org.example.models;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class Carro {
     }
 
     public void borrarProducto(Long id){
-        this.items.removeIf(i -> i.getItem().getId().equals(id));
+        this.items.removeIf(i -> i.getProducto().getId().equals(id));
     }
 
     public void borrarProductos(List<Long> ids){
@@ -37,6 +38,13 @@ public class Carro {
     }
 
     public void actualizarCantidad(Long id, int cantidad){
-        items.stream().filter(i -> i.getItem().getId().equals(id)).findAny().ifPresent(i -> i.setCantidad(cantidad));
+        items.stream().filter(i -> i.getProducto().getId().equals(id)).findAny().ifPresent(i -> i.setCantidad(cantidad));
     }
+
+    public BigDecimal getTotal() {
+        return items.stream()
+                .map(ItemCarro::getImporte)            // devuelve BigDecimal
+                .reduce(BigDecimal.ZERO, BigDecimal::add); // suma todos
+    }
+
 }

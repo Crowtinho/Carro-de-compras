@@ -9,18 +9,16 @@ public class Producto {
     private BigDecimal precio;
     private LocalDate fechaRegistro;
     private Categoria categoria;
-    private String sku;
 
     public Producto() {
     }
 
-    public Producto(Long id, String nombre, BigDecimal precio, LocalDate fechaRegistro, Categoria categoria, String sku) {
+    public Producto(Long id, String nombre, BigDecimal precio, LocalDate fechaRegistro, Categoria categoria) {
         this.id = id;
-        this.nombre = nombre;
+        this.nombre = nombre.toLowerCase();
         this.precio = precio;
         this.fechaRegistro = fechaRegistro;
         this.categoria = categoria;
-        this.sku = sku;
     }
 
     public Long getId() {
@@ -32,11 +30,16 @@ public class Producto {
     }
 
     public String getNombre() {
-        return nombre;
+        if (nombre == null || nombre.isEmpty()) {
+            return nombre;
+        }
+        String lower = nombre.toLowerCase();
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 
+
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre.toLowerCase();
     }
 
     public BigDecimal getPrecio() {
@@ -63,11 +66,4 @@ public class Producto {
         this.categoria = categoria;
     }
 
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
 }

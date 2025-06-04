@@ -1,92 +1,54 @@
-package org.example.services;
+package org.example.services.producto;
 
-import org.example.models.Categoria;
 import org.example.models.Producto;
-import org.example.repositories.CategoriaRepositoryImpl;
-import org.example.repositories.ProductoRepository;
+import org.example.repositories.Repository;
 import org.example.repositories.ProductoRepositoryImpl;
+import org.example.services.ServiceExeption;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class ProductoServiceImpl implements ProductoService{
-    private ProductoRepository<Producto> productoRepository;
-    private ProductoRepository<Categoria> categoriaProductoRepository;
+public class ProductoServiceImpl implements ProductoSnService {
+    private Repository<Producto> repository;
+
 
     public ProductoServiceImpl(Connection conn) {
-        productoRepository = new ProductoRepositoryImpl(conn);
-        categoriaProductoRepository = new CategoriaRepositoryImpl(conn);
+        repository = new ProductoRepositoryImpl(conn);
     }
 
     @Override
-    public List<Producto> listarProducto() {
+    public List<Producto> listar() {
         try {
-            return productoRepository.listar();
+            return repository.listar();
         } catch (SQLException e) {
             throw new ServiceExeption(e.getMessage(),e.getCause());
         }
     }
 
     @Override
-    public Optional<Producto> productoPorId(Long id) {
+    public Optional<Producto> porId(Long id) {
         try {
-            return Optional.ofNullable(productoRepository.porId(id));
+            return Optional.ofNullable(repository.porId(id));
         } catch (SQLException e) {
             throw new ServiceExeption(e.getMessage(),e.getCause());
         }
     }
 
     @Override
-    public void guardarProducto(Producto producto) {
+    public void guardar(Producto producto) {
         try {
-            productoRepository.guardar(producto);
+            repository.guardar(producto);
         } catch (SQLException e) {
             throw new ServiceExeption(e.getMessage(),e.getCause());
         }
     }
 
     @Override
-    public void eliminarProducto(Long id) {
+    public void eliminar(Long id) {
         try {
-            productoRepository.eliminar(id);
-        } catch (SQLException e) {
-            throw new ServiceExeption(e.getMessage(),e.getCause());
-        }
-    }
-
-    @Override
-    public List<Categoria> listarCategoria() {
-        try {
-            return categoriaProductoRepository.listar();
-        } catch (SQLException e) {
-            throw new ServiceExeption(e.getMessage(),e.getCause());
-        }
-    }
-
-    @Override
-    public Optional<Categoria> categoriaPorId(Long id) {
-        try {
-            return Optional.ofNullable(categoriaProductoRepository.porId(id));
-        } catch (SQLException e) {
-            throw new ServiceExeption(e.getMessage(),e.getCause());
-        }
-    }
-
-    @Override
-    public void guardarCategoria(Categoria categoria) {
-        try {
-            categoriaProductoRepository.guardar(categoria);
-        } catch (SQLException e) {
-            throw new ServiceExeption(e.getMessage(),e.getCause());
-        }
-    }
-
-    @Override
-    public void eliminarCategoria(Long id) {
-        try {
-            categoriaProductoRepository.eliminar(id);
+            repository.eliminar(id);
         } catch (SQLException e) {
             throw new ServiceExeption(e.getMessage(),e.getCause());
         }

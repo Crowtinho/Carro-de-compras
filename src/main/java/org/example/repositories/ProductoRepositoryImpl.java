@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductoRepositoryImpl implements ProductoRepository<Producto> {
+public class ProductoRepositoryImpl implements Repository<Producto> {
 
     private final Connection conn;
 
@@ -47,19 +47,18 @@ public class ProductoRepositoryImpl implements ProductoRepository<Producto> {
     public void guardar(Producto producto) throws SQLException {
         String sql;
         if (producto.getId() != null && producto.getId()>0){
-            sql = "UPDATE productos SET nombre=?,precio=?,categoria_id=?,sku=? WHERE id=?";
+            sql = "UPDATE productos SET nombre=?,precio=?,categoria_id=? WHERE id=?";
         }else {
-            sql = "INSERT INTO productos(nombre,precio,categoria_id,sku,fecha_registro) VALUES(?,?,?,?,?)";
+            sql = "INSERT INTO productos(nombre,precio,categoria_id,fecha_registro) VALUES(?,?,?,?)";
         }
         try (PreparedStatement statement = conn.prepareStatement(sql)){
             statement.setString(1, producto.getNombre());
             statement.setBigDecimal(2, producto.getPrecio());
             statement.setLong(3,producto.getCategoria().getId());
-            statement.setString(4, producto.getSku());
             if (producto.getId() != null && producto.getId()>0){
-                statement.setLong(5, producto.getId());
+                statement.setLong(4, producto.getId());
             }else {
-                statement.setDate(5, Date.valueOf(producto.getFechaRegistro()));
+                statement.setDate(4, Date.valueOf(producto.getFechaRegistro()));
             }
             statement.executeUpdate();
         }
@@ -82,7 +81,6 @@ public class ProductoRepositoryImpl implements ProductoRepository<Producto> {
         p.setFechaRegistro(rs.getDate("fecha_registro").toLocalDate());
         Categoria c = new Categoria(rs.getLong("categoria_id"),rs.getString("categoria"));
         p.setCategoria(c);
-        p.setSku(rs.getString("sku"));
         return p;
 
     }

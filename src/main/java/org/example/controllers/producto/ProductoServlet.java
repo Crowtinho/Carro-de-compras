@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controllers.producto;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.services.login.LoginService;
 import org.example.services.login.LoginServiceImpl;
-import org.example.services.producto.ProductoService;
 import org.example.services.producto.ProductoServiceImpl;
 import org.example.services.producto.ProductoSnService;
 

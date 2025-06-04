@@ -10,7 +10,7 @@ public class Categoria {
 
     public Categoria(Long id, String nombre) {
         this.id = id;
-        this.nombre = nombre;
+        this.nombre = nombre.toLowerCase();
     }
 
     public Long getId() {
@@ -22,10 +22,15 @@ public class Categoria {
     }
 
     public String getNombre() {
-        return nombre;
+        if (nombre == null || nombre.isEmpty()) {
+            return nombre;
+        }
+        String lower = nombre.toLowerCase();
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 
+
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre.toLowerCase();
     }
 }

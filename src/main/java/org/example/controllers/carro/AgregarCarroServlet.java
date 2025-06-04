@@ -1,4 +1,4 @@
-package org.example.controllers;
+package org.example.controllers.carro;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpSession;
 import org.example.models.Carro;
 import org.example.models.ItemCarro;
 import org.example.models.Producto;
-import org.example.services.producto.ProductoService;
 import org.example.services.producto.ProductoServiceImpl;
 import org.example.services.producto.ProductoSnService;
 
