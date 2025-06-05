@@ -50,21 +50,14 @@ public class ProductoFormServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         Connection conn = (Connection) req.getAttribute("conn");
         ProductoSnService service = new ProductoServiceImpl(conn);
         CategoriaService categoriaService = new CategoriaServiceImpl(conn);
+
         String nombre = req.getParameter("nombre");
-
-        String precio;
-        try {
-            precio = req.getParameter("precio");
-        } catch (NumberFormatException e){
-            precio = String.valueOf(0);
-        }
-
-
+        String precioStr = req.getParameter("precio");
         String fechaStr = req.getParameter("fecha_registro");
+
         Long categoriaId;
         try {
             categoriaId = Long.parseLong(req.getParameter("categoria"));
@@ -73,42 +66,51 @@ public class ProductoFormServlet extends HttpServlet {
         }
 
         Map<String, String> errores = new HashMap<>();
-        if (nombre == null || nombre.isBlank()){
-            errores.put("nombre", "el nombre es requerido!");
+
+        if (nombre == null || nombre.isBlank()) {
+            errores.put("nombre", "El nombre es requerido.");
         }
 
+        BigDecimal precio = null;
+        if (precioStr == null || precioStr.isBlank()) {
+            errores.put("precio", "El precio es requerido.");
+        } else {
+            try {
+                precio = new BigDecimal(precioStr);
+            } catch (NumberFormatException | NullPointerException e) {
+                errores.put("precio", "El precio debe ser un número válido.");
+            }
+        }
 
-        if (fechaStr == null || fechaStr.isBlank()){
-            errores.put("fecha_registro", "la fecha es requerida");
-        }
-        if (precio.equals(0)) {
-            errores.put("precio", "el precio es requerido!");
-        }
-        if (categoriaId.equals(0L)){
-            errores.put("categoria", "la categoria es requerida!");
+        LocalDate fecha = null;
+        if (fechaStr == null || fechaStr.isBlank()) {
+            errores.put("fecha_registro", "La fecha es requerida.");
+        } else {
+            try {
+                fecha = LocalDate.parse(fechaStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } catch (DateTimeParseException e) {
+                errores.put("fecha_registro", "La fecha tiene un formato inválido.");
+            }
         }
 
-        LocalDate fecha;
-        try {
-            fecha = LocalDate.parse(fechaStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        } catch (DateTimeParseException e) {
-            fecha = null;
+        if (categoriaId.equals(0L)) {
+            errores.put("categoria", "La categoría es requerida.");
         }
+
         long id;
         try {
             id = Long.parseLong(req.getParameter("id"));
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             id = 0L;
         }
+
         Producto producto = new Producto();
         producto.setId(id);
         producto.setNombre(nombre);
-        producto.setPrecio(new BigDecimal(precio));
+        producto.setPrecio(precio); // puede ser null si hubo error
         producto.setFechaRegistro(fecha);
-
-        Categoria categoria = new Categoria();
-        categoria.setId(categoriaId);
-        producto.setCategoria(categoria);
+        producto.setCategoria(new Categoria());
+        producto.getCategoria().setId(categoriaId);
 
         if (errores.isEmpty()) {
             service.guardar(producto);
@@ -120,5 +122,6 @@ public class ProductoFormServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/productosform.jsp").forward(req, resp);
         }
     }
+
 
 }

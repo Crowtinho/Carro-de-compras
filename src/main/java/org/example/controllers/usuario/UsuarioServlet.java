@@ -21,7 +21,9 @@ public class UsuarioServlet extends HttpServlet {
         UsuarioService service = new UsuarioServiceImpl(conn);
         List<Usuario> usuarios = service.listar();
 
-        req.setAttribute("usuarios",usuarios);
-        getServletContext().getRequestDispatcher("/usuariosListar.jsp").forward(req,resp);
+        req.setAttribute("usuarios", usuarios);
+        req.setAttribute("titulo", "Listado de usuarios");
+        req.setAttribute("contenido", "/usuariosListar.jsp");
+        getServletContext().getRequestDispatcher("/layout/layout.jsp").forward(req, resp);
     }
 }

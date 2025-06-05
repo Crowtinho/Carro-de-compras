@@ -8,11 +8,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet({"/home","/"})
+@WebServlet({"/home", "/crudcarro/", ""})
 public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/index.jsp").forward(req,resp);
+        req.setAttribute("titulo", "Inicio");
+        req.setAttribute("contenido", "/index.jsp"); // asumiendo que mueves index.jsp a /vistas
+        getServletContext().getRequestDispatcher("/layout/layout.jsp").forward(req, resp);
     }
 }
+
 

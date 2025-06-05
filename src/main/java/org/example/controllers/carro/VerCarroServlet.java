@@ -12,6 +12,15 @@ import java.io.IOException;
 public class VerCarroServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/carro.jsp").forward(req,resp);
+        // Configurar atributos para la plantilla
+        req.setAttribute("titulo", "Carro de Compras");
+        req.setAttribute("contenido", "/carro.jsp");
+
+        // Reenviar a la plantilla general
+        getServletContext().getRequestDispatcher("/layout/layout.jsp").forward(req, resp);
+
+
+//        <a class="btn btn-primary btn-sm" href="<%= request.getContextPath() %>/home">Menú principal</a>
+
     }
 }

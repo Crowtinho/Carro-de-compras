@@ -24,7 +24,10 @@ public class ProductoServlet extends HttpServlet {
         LoginService username = new LoginServiceImpl();
         req.setAttribute("username",username.getUsername(req));
 
-        getServletContext().getRequestDispatcher("/listar.jsp").forward(req,resp);
+        req.setAttribute("titulo", "Productos");
+        req.setAttribute("contenido", "/listar.jsp");
+        getServletContext().getRequestDispatcher("/layout/layout.jsp").forward(req, resp);
+
 
 
     }
