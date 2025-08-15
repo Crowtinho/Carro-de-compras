@@ -75,7 +75,7 @@ public class UsuarioRepositoryImpl implements UsuarioRepository{
     public void guardar(Usuario usuario) throws SQLException {
         String sql;
         if (usuario.getId() != null && usuario.getId()>0){
-            sql = "UPDATE usuarios SET username=?, password=?, email=?,rol=? WHERE id=?";
+            sql = "UPDATE usuarios SET username=?, password=?, email=? WHERE id=?";
         }else {
             sql = "INSERT INTO usuarios(username, password,email,rol) VALUES(?,?,?,?)";
         }

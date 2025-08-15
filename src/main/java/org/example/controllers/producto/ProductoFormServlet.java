@@ -57,6 +57,7 @@ public class ProductoFormServlet extends HttpServlet {
         String nombre = req.getParameter("nombre");
         String precioStr = req.getParameter("precio");
         String fechaStr = req.getParameter("fecha_registro");
+        String imagen = req.getParameter("imagen");
 
         Long categoriaId;
         try {
@@ -97,6 +98,10 @@ public class ProductoFormServlet extends HttpServlet {
             errores.put("categoria", "La categoría es requerida.");
         }
 
+        if (imagen == null || imagen.isBlank()) {
+            errores.put("imagen", "La imagen es requerida.");
+        }
+
         long id;
         try {
             id = Long.parseLong(req.getParameter("id"));
@@ -111,6 +116,7 @@ public class ProductoFormServlet extends HttpServlet {
         producto.setFechaRegistro(fecha);
         producto.setCategoria(new Categoria());
         producto.getCategoria().setId(categoriaId);
+        producto.setImagen(imagen);
 
         if (errores.isEmpty()) {
             service.guardar(producto);
@@ -122,6 +128,8 @@ public class ProductoFormServlet extends HttpServlet {
             getServletContext().getRequestDispatcher("/productosform.jsp").forward(req, resp);
         }
     }
+
+
 
 
 }
