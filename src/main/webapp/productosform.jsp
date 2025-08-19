@@ -16,15 +16,20 @@ import="java.util.*,java.time.format.*,java.math.BigDecimal, org.example.models.
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="text-center mb-4"><%= (producto.getId() != null && producto.getId() > 0) ? "Editar Producto" : "Crear Producto" %></h2>
+    <h2 class="text-center mb-4">
+        <%= (producto.getId() != null && producto.getId() > 0) ? "Editar Producto" : "Crear Producto" %>
+    </h2>
 
-    <form action="<%=request.getContextPath()%>/productos/form" method="post" class="mx-auto" style="max-width: 600px;">
+    <!-- 🔹 Importante: enctype para soportar archivos -->
+    <form action="<%=request.getContextPath()%>/productos/form" method="post"
+          class="mx-auto" style="max-width: 600px;" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<%= producto.getId() != null ? producto.getId() : "" %>">
 
         <!-- Nombre -->
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control <%= (errores != null && errores.containsKey("nombre")) ? "is-invalid" : "" %>"
+            <input type="text"
+                   class="form-control <%= (errores != null && errores.containsKey("nombre")) ? "is-invalid" : "" %>"
                    id="nombre" name="nombre"
                    value="<%= producto.getNombre() != null ? producto.getNombre() : "" %>">
             <div class="invalid-feedback">
@@ -35,7 +40,8 @@ import="java.util.*,java.time.format.*,java.math.BigDecimal, org.example.models.
         <!-- Precio -->
         <div class="mb-3">
             <label for="precio" class="form-label">Precio</label>
-            <input type="number" class="form-control <%= (errores != null && errores.containsKey("precio")) ? "is-invalid" : "" %>"
+            <input type="number"
+                   class="form-control <%= (errores != null && errores.containsKey("precio")) ? "is-invalid" : "" %>"
                    id="precio" name="precio"
                    value="<%= (producto.getPrecio() != null && producto.getPrecio().compareTo(BigDecimal.ZERO) != 0) ? producto.getPrecio() : "" %>">
             <div class="invalid-feedback">
@@ -46,7 +52,8 @@ import="java.util.*,java.time.format.*,java.math.BigDecimal, org.example.models.
         <!-- Fecha -->
         <div class="mb-3">
             <label for="fecha_registro" class="form-label">Fecha de Registro</label>
-            <input type="date" class="form-control <%= (errores != null && errores.containsKey("fecha_registro")) ? "is-invalid" : "" %>"
+            <input type="date"
+                   class="form-control <%= (errores != null && errores.containsKey("fecha_registro")) ? "is-invalid" : "" %>"
                    id="fecha_registro" name="fecha_registro" value="<%= fecha %>">
             <div class="invalid-feedback">
                 <%= (errores != null && errores.containsKey("fecha_registro")) ? errores.get("fecha_registro") : "" %>
@@ -69,6 +76,25 @@ import="java.util.*,java.time.format.*,java.math.BigDecimal, org.example.models.
             <div class="invalid-feedback">
                 <%= (errores != null && errores.containsKey("categoria")) ? errores.get("categoria") : "" %>
             </div>
+        </div>
+
+        <!-- 🔹 Imagen -->
+        <div class="mb-3">
+            <label for="imagen" class="form-label">Imagen</label>
+            <input type="file"
+                   class="form-control <%= (errores != null && errores.containsKey("imagen")) ? "is-invalid" : "" %>"
+                   id="imagen" name="imagen">
+            <div class="invalid-feedback">
+                <%= (errores != null && errores.containsKey("imagen")) ? errores.get("imagen") : "" %>
+            </div>
+
+            <!-- Mostrar vista previa si el producto ya tiene una imagen -->
+            <% if (producto.getImagen() != null && !producto.getImagen().isEmpty()) { %>
+                <div class="mt-3 text-center">
+                    <img src="<%= request.getContextPath() + "/" + producto.getImagen() %>"
+                         alt="Imagen del producto" class="img-thumbnail" style="max-height: 150px;">
+                </div>
+            <% } %>
         </div>
 
         <!-- Botón -->

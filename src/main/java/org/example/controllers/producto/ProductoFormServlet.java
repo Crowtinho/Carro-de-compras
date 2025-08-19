@@ -1,10 +1,12 @@
 package org.example.controllers.producto;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import org.example.models.Categoria;
 import org.example.models.Producto;
 import org.example.services.categoria.CategoriaService;
@@ -12,8 +14,10 @@ import org.example.services.categoria.CategoriaServiceImpl;
 import org.example.services.producto.ProductoServiceImpl;
 import org.example.services.producto.ProductoSnService;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/productos/form")
+@MultipartConfig
 public class ProductoFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,7 +62,29 @@ public class ProductoFormServlet extends HttpServlet {
         String nombre = req.getParameter("nombre");
         String precioStr = req.getParameter("precio");
         String fechaStr = req.getParameter("fecha_registro");
-        String imagen = req.getParameter("imagen");
+
+//      ============ parte de la imagen
+        Part filePart= req.getPart("imagen");
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+
+//      ========== ruta de guardado en pc
+//        String uploadPath = getServletContext().getRealPath("/uploads");
+        String uploadPath = "C:/Users/andres/Pictures/crudcarro";
+
+        // Crear carpeta si no existe
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+        //  ======== Guardar archivo en disco
+//        String filePath = uploadPath + File.separator + fileName;
+//        filePart.write(filePath);
+
+        // Guardar en la BD solo el nombre o la ruta relativa
+//        String imagen = "uploads/" + fileName;
+        String imagen = fileName;
+
+
 
         Long categoriaId;
         try {
@@ -98,7 +125,7 @@ public class ProductoFormServlet extends HttpServlet {
             errores.put("categoria", "La categoría es requerida.");
         }
 
-        if (imagen == null || imagen.isBlank()) {
+        if (fileName == null || fileName.isBlank()) {
             errores.put("imagen", "La imagen es requerida.");
         }
 
@@ -119,6 +146,8 @@ public class ProductoFormServlet extends HttpServlet {
         producto.setImagen(imagen);
 
         if (errores.isEmpty()) {
+            String filePath = uploadPath + File.separator + fileName;
+            filePart.write(filePath);
             service.guardar(producto);
             resp.sendRedirect(req.getContextPath() + "/productos");
         } else {
