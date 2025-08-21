@@ -1,14 +1,15 @@
-# Imagen base con Tomcat 11 y Java 17
+# Etapa 1: Construir el WAR con Maven
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Copiar el WAR en Tomcat
 FROM tomcat:11-jdk17
+WORKDIR /usr/local/tomcat
+RUN rm -rf webapps/*
+COPY --from=build /app/target/*.war webapps/ROOT.war
 
-# Elimina la aplicación por defecto de Tomcat (ROOT)
-RUN rm -rf /usr/local/tomcat/webapps/*
-
-# Copia tu WAR generado por Maven en la carpeta de despliegue de Tomcat
-COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
-
-# Expone el puerto que Railway necesita
 EXPOSE 8080
-
-# Arranca Tomcat
 CMD ["catalina.sh", "run"]
