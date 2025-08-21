@@ -1,25 +1,14 @@
-# ---------- Etapa 1: Construcción ----------
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Imagen base con Tomcat 11 y Java 17
+FROM tomcat:11-jdk17
 
-WORKDIR /app
-
-# Copiar pom.xml y descargar dependencias primero (cache)
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copiar el código fuente y compilar
-COPY src ./src
-RUN mvn clean package -DskipTests
-
-# ---------- Etapa 2: Runtime con Tomcat ----------
-FROM tomcat:11.0-jdk17-temurin
-
-# Eliminar las apps por defecto de Tomcat
+# Elimina la aplicación por defecto de Tomcat (ROOT)
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copiar el .war generado desde la etapa anterior
-COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
+# Copia tu WAR generado por Maven en la carpeta de despliegue de Tomcat
+COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
 
+# Expone el puerto que Railway necesita
 EXPOSE 8080
 
+# Arranca Tomcat
 CMD ["catalina.sh", "run"]
