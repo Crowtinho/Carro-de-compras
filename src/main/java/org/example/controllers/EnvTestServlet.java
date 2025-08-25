@@ -11,9 +11,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
-@WebServlet("/test-db")
-public class TestDBServlet extends HttpServlet {
+@WebServlet("/env-test")
+public class EnvTestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -22,6 +23,14 @@ public class TestDBServlet extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
 
+        out.println("=== Variables de entorno ===");
+        Map<String, String> env = System.getenv();
+        out.println("DB_URL = " + env.get("DB_URL"));
+        out.println("DB_USER = " + env.get("DB_USER"));
+        out.println("DB_PASS = " + env.get("DB_PASS"));
+        out.println();
+
+        out.println("=== Prueba de conexión a DB ===");
         try (Connection conn = ConnectionDataBase.getConnection()) {
             if (conn != null && !conn.isClosed()) {
                 out.println("✅ Conexión a la base de datos exitosa!");

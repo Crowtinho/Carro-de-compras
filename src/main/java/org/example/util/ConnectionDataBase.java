@@ -1,7 +1,6 @@
 package org.example.util;
 
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -19,11 +18,16 @@ public class ConnectionDataBase {
             ? System.getenv("DB_PASS")
             : "sasa";
 
-    public static Connection getConnection() throws SQLException {
-        //            Class.forName("com.mysql.cj.jdbc.Driver"); // asegura registro del driver
-        Driver driver = new com.mysql.cj.jdbc.Driver();
-        DriverManager.registerDriver(driver);
+    static {
+        try {
+            // Esto fuerza a registrar el driver en el classloader de Tomcat
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("No se pudo cargar el driver de MySQL", e);
+        }
+    }
 
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 }
