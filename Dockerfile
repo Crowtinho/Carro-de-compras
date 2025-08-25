@@ -18,5 +18,5 @@ COPY --from=build /app/target/*.war webapps/ROOT.war
 # Railway inyecta $PORT, pero ponemos valor por defecto
 ENV PORT=8080
 
-# Reemplazamos el puerto en server.xml (si $PORT está vacío → usa 8080)
+# Configurar Tomcat para escuchar en $PORT
 CMD sh -c 'PORT=${PORT:-8080} && sed -i "s/8080/${PORT}/g" conf/server.xml && exec catalina.sh run'
