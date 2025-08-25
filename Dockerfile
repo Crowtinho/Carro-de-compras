@@ -15,8 +15,5 @@ RUN rm -rf webapps/*
 # Copiar el WAR como ROOT.war
 COPY --from=build /app/target/*.war webapps/ROOT.war
 
-# Railway inyecta $PORT, pero ponemos valor por defecto
-ENV PORT=8080
-
-# Configurar Tomcat para escuchar en $PORT
-CMD sh -c 'PORT=${PORT:-8080} && sed -i "s/8080/${PORT}/g" conf/server.xml && exec catalina.sh run'
+# Configurar Tomcat para escuchar en $PORT (Railway lo asigna)
+CMD sh -c 'sed -i "s/8080/${PORT}/g" conf/server.xml && exec catalina.sh run'
