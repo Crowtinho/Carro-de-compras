@@ -7,9 +7,9 @@ import java.sql.SQLException;
 public class ConnectionDataBase {
 
     // Leer las variables de entorno que Railway inyecta automáticamente
-    private static final String URL = System.getenv().getOrDefault("DB_URL", "jdbc:mysql://localhost:3307/curso_java?serverTimezone=UTC");
-    private static final String USERNAME = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASS", "sasa");
+    private static final String URL = System.getenv("DB_URL");
+    private static final String USERNAME = System.getenv("DB_USER");
+    private static final String PASSWORD = System.getenv("DB_PASS");
 
 
     static {

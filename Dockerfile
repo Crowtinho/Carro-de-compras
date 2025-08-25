@@ -17,4 +17,5 @@ COPY --from=build /app/target/*.war webapps/ROOT.war
 
 # Configurar Tomcat para escuchar en $PORT (Railway lo asigna)
 #CMD ["catalina.sh", "run", "-Dserver.port=${PORT}"]
-CMD ["catalina.sh", "run", "-DDB_URL=${DB_URL}", "-DDB_USER=${DB_USER}", "-DDB_PASS=${DB_PASS}", "-Dserver.port=${PORT}"]
+#CMD ["catalina.sh", "run", "-DDB_URL=${DB_URL}", "-DDB_USER=${DB_USER}", "-DDB_PASS=${DB_PASS}", "-Dserver.port=${PORT}"]
+CMD ["catalina.sh", "run"]
