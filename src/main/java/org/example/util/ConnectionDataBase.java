@@ -6,11 +6,14 @@ import java.sql.SQLException;
 
 public class ConnectionDataBase {
 
-    private static final String URL = System.getProperty("DB_URL", "jdbc:mysql://localhost:3307/curso_java?serverTimezone=UTC");
-    private static final String USERNAME = System.getProperty("DB_USER", "root");
-    private static final String PASSWORD = System.getProperty("DB_PASS", "sasa");
+    // Leer desde variables de entorno
+    private static final String URL = System.getenv().getOrDefault(
+            "DB_URL",
+            "jdbc:mysql://localhost:3307/curso_java?serverTimezone=UTC"
+    );
+    private static final String USERNAME = System.getenv().getOrDefault("DB_USER", "root");
+    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASS", "sasa");
 
-    // Cargar driver MySQL al inicializar la clase
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
