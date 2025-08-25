@@ -8,8 +8,13 @@ RUN mvn clean package -DskipTests
 # Etapa 2: Copiar el WAR en Tomcat
 FROM tomcat:11-jdk17
 WORKDIR /usr/local/tomcat
+
+# Limpiar apps por defecto
 RUN rm -rf webapps/*
+
+# Copiar WAR como ROOT.war
 COPY --from=build /app/target/*.war webapps/ROOT.war
 
 EXPOSE 8080
+
 CMD ["catalina.sh", "run"]
