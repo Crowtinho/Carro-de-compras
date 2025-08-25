@@ -12,11 +12,11 @@ WORKDIR /usr/local/tomcat
 # Limpiar apps por defecto
 RUN rm -rf webapps/*
 
-# Copiar WAR como ROOT.war
+# Copiar el WAR como ROOT.war
 COPY --from=build /app/target/*.war webapps/ROOT.war
 
-# Railway define $PORT automáticamente
+# Railway inyecta $PORT, pero ponemos valor por defecto
 ENV PORT=8080
 
-# Entry script para reemplazar el puerto y arrancar Tomcat
-CMD sed -i "s/8080/${PORT}/g" conf/server.xml && catalina.sh run
+# Reemplazamos el puerto en server.xml (si $PORT está vacío → usa 8080)
+CMD sh -c 'PORT=${PORT:-8080} && sed -i "s/8080/${PORT}/g" conf/server.xml && exec catalina.sh run'
