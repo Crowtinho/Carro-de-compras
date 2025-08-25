@@ -1,6 +1,7 @@
 package org.example.util;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -19,11 +20,10 @@ public class ConnectionDataBase {
             : "sasa";
 
     public static Connection getConnection() throws SQLException {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // asegura registro del driver
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("MySQL JDBC Driver no encontrado", e);
-        }
+        //            Class.forName("com.mysql.cj.jdbc.Driver"); // asegura registro del driver
+        Driver driver = new com.mysql.cj.jdbc.Driver();
+        DriverManager.registerDriver(driver);
+
         return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 }
